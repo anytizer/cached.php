@@ -6,8 +6,13 @@ class CachedContentReader implements CachedContentInterface
 	{
 	}
 	
-	public function read(string $cache_file, string $url, int $seconds)
+	public function read(string $url, int $seconds)
 	{
+		/**
+		 * Cache path and file
+		 */
+		$cache_file = realpath(dirname(__FILE__)."/../..")."/caches/".md5($url).".cache";
+		
 		$content = "";
 		if($this->CacheExists($cache_file) && !$this->CacheExpired($cache_file))
 		{
@@ -24,8 +29,6 @@ class CachedContentReader implements CachedContentInterface
 	
 	public function CacheExists(string $cache_file): bool
 	{
-		//return true;
-		
 		$cache_exists = is_file($cache_file) && is_writable($cache_file);
 		return $cache_exists;
 	}
@@ -35,11 +38,10 @@ class CachedContentReader implements CachedContentInterface
 		$age = 1 * 60 * 60; // 1 hour
 		$now = time();
 		$old = filemtime($cache_file);
-		echo "Diff: ", $diff = $now - $old;
+		#echo "Diff: ", $diff = $now - $old;
 		
 		$is_expired = $diff > $age;
 		return $is_expired;
-		//return true;
 	}
 
 	public function FreshContent(string $url): string
@@ -64,7 +66,6 @@ class CachedContentReader implements CachedContentInterface
 
 	private function curl_content(string $url): string
 	{
-		echo "URLing...: ", $url;
 		$ch = curl_init($url);
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_HEADER, false);
