@@ -1,4 +1,5 @@
 <?php
+namespace cached;
 
 class CachedContentReader implements CachedContentInterface
 {

@@ -1,4 +1,6 @@
 <?php
+namespace cached;
+
 interface CachedContentInterface
 {
 	public function CacheExists(string $cache_file): bool;
